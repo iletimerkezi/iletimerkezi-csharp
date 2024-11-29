@@ -14,14 +14,16 @@
 
 ### NuGet Paketi ile Kurulum
 
+[Nuget Paket Linki](https://www.nuget.org/packages/iletimerkezi/)
+
 ```bash
-dotnet add package IletiMerkezi
+dotnet add package iletimerkezi
 ```
 
 veya Package Manager Console kullanarak:
 
 ```bash
-Install-Package IletiMerkezi
+Install-Package iletimerkezi
 ```
 
 
