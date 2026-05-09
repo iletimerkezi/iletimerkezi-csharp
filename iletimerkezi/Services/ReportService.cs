@@ -9,6 +9,7 @@ namespace IletiMerkezi.Services
     {
         private int? _lastOrderId;
         private int _lastPage;
+        private int _lastRowCount = 1000;
 
         public ReportService(IHttpClient httpClient, string apiKey, string apiHash) 
             : base(httpClient, apiKey, apiHash)
@@ -19,6 +20,7 @@ namespace IletiMerkezi.Services
         {
             _lastOrderId = orderId;
             _lastPage = page;
+            _lastRowCount = rowCount;
 
             var payload = new
             {
@@ -54,7 +56,7 @@ namespace IletiMerkezi.Services
                 throw new System.InvalidOperationException("No previous report request found. Call GetAsync first.");
             }
 
-            return await GetAsync(_lastOrderId.Value, _lastPage + 1);
+            return await GetAsync(_lastOrderId.Value, _lastPage + 1, _lastRowCount);
         }
     }
 }

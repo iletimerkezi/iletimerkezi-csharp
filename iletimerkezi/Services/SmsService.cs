@@ -22,8 +22,38 @@ namespace IletiMerkezi.Services
 
         public SmsService Schedule(string sendDateTime)
         {
-            _sendDateTime = sendDateTime;
+            _sendDateTime = NormalizeSendDateTime(sendDateTime);
             return this;
+        }
+
+        private static string NormalizeSendDateTime(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return "";
+
+            // Zaten doğru format: GG/AA/YYYY SS:DD
+            if (DateTime.TryParseExact(value, "dd/MM/yyyy HH:mm",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out var parsed))
+                return value;
+
+            // Alternatif format: YYYY-MM-dd HH:mm — dönüştür
+            if (DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out parsed))
+                return parsed.ToString("dd/MM/yyyy HH:mm");
+
+            // Alternatif format: YYYY-MM-dd HH:mm:ss (saniyeliyle) — dönüştür
+            if (DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out parsed))
+                return parsed.ToString("dd/MM/yyyy HH:mm");
+
+            // Desteklenmeyen format
+            throw new ArgumentException(
+                $"Geçersiz sendDateTime formatı: '{value}'. " +
+                "Beklenen format: GG/AA/YYYY SS:DD (örn: 25/12/2026 10:00) " +
+                "veya YYYY-AA-GG SS:DD (örn: 2026-12-25 10:00).");
         }
 
         public SmsService EnableIysConsent()

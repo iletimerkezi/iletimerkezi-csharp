@@ -66,8 +66,8 @@ namespace IletiMerkezi.Tests.Services
             Assert.False(result.Ok);
             Assert.Equal(401, result.StatusCode);
             Assert.Equal("Üyelik bilgileri hatalı", result.Message);
-            Assert.Equal(5m, result.Amount); // Default value
-            Assert.Equal(5, result.Credits); // Default value
+            Assert.Equal(0m, result.Amount);
+            Assert.Equal(0, result.Credits);
         }
 
         [Fact]

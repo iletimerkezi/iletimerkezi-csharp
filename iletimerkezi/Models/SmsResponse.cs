@@ -4,7 +4,7 @@ namespace IletiMerkezi.Models
 {
     public class SmsResponse : BaseResponse<SmsResponseData>
     {
-        public int OrderId => Response?.Data?.Order?.Id ?? 0;
+        public int OrderId => int.TryParse(Response?.Data?.Order?.Id, out var id) ? id : 0;
     }
 
     public class SmsResponseData
@@ -16,6 +16,6 @@ namespace IletiMerkezi.Models
     public class Order
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
     }
 } 

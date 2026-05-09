@@ -25,7 +25,7 @@ namespace IletiMerkezi.Tests.Services
                         ""message"": ""İşlem başarılı""
                     },
                     ""order"": {
-                        ""id"": 12345
+                        ""id"": ""12345""
                     }
                 }
             }";
@@ -40,7 +40,7 @@ namespace IletiMerkezi.Tests.Services
             Assert.True(result.Ok);
             Assert.Equal(200, result.StatusCode);
             Assert.Equal("İşlem başarılı", result.Message);
-            Assert.Equal(12345, result.Response.Data.Order.Id);
+            Assert.Equal(12345, result.OrderId);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace IletiMerkezi.Tests.Services
                         ""message"": ""İşlem başarılı""
                     },
                     ""order"": {
-                        ""id"": 12345
+                        ""id"": ""12345""
                     }
                 }
             }";
@@ -69,7 +69,7 @@ namespace IletiMerkezi.Tests.Services
             // Assert
             Assert.True(result.Ok);
             Assert.Equal(200, result.StatusCode);
-            Assert.Equal(12345, result.Response.Data.Order.Id);
+            Assert.Equal(12345, result.OrderId);
         }
 
         [Fact]
@@ -79,6 +79,7 @@ namespace IletiMerkezi.Tests.Services
             var mockHttpClient = new MockHttpClient("{}");
             var smsService = new SmsService(mockHttpClient, API_KEY, API_HASH, DEFAULT_SENDER);
             var sendDateTime = "2024-03-25 10:00:00";
+            var normalizedDateTime = "25/03/2024 10:00"; // NormalizeSendDateTime dönüştürür
 
             // Act
             await smsService
@@ -97,7 +98,7 @@ namespace IletiMerkezi.Tests.Services
                     },
                     ""order"": {
                         ""sender"": """ + DEFAULT_SENDER + @""",
-                        ""sendDateTime"": """ + sendDateTime + @""",
+                        ""sendDateTime"": """ + normalizedDateTime + @""",
                         ""iys"": 1,
                         ""iysList"": ""TICARI"",
                         ""message"": {

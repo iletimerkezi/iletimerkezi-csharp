@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using IletiMerkezi.Http;
@@ -21,8 +22,39 @@ namespace IletiMerkezi.Services
             _apiHash = apiHash;
         }
 
+        private static void ValidateDateFormat(string value, string paramName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException($"'{paramName}' boş olamaz.");
+
+            if (!DateTime.TryParseExact(value, "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out _))
+                throw new ArgumentException(
+                    $"Geçersiz '{paramName}' formatı: '{value}'. Beklenen format: YYYY-AA-GG (örn: 2026-12-25).");
+        }
+
+        private static void ValidateDateRange(string startDate, string endDate)
+        {
+            var start = DateTime.ParseExact(startDate, "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture);
+            var end = DateTime.ParseExact(endDate, "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture);
+
+            if (end < start)
+                throw new ArgumentException($"'endDate' ({endDate}), 'startDate' ({startDate}) tarihinden önce olamaz.");
+
+            if ((end - start).TotalDays > 10)
+                throw new ArgumentException(
+                    $"'startDate' ile 'endDate' arasındaki fark en fazla 10 gün olabilir. Girilen aralık: {(end - start).TotalDays} gün.");
+        }
+
         public async Task<SummaryResponse> ListAsync(string startDate, string endDate, int page = 1)
         {
+            ValidateDateFormat(startDate, nameof(startDate));
+            ValidateDateFormat(endDate, nameof(endDate));
+            ValidateDateRange(startDate, endDate);
+
             _lastStartDate = startDate;
             _lastEndDate = endDate;
             _lastPage = page;

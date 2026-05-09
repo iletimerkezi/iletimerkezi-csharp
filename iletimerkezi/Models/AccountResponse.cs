@@ -4,8 +4,8 @@ namespace IletiMerkezi.Models
 {
     public class AccountResponse : BaseResponse<AccountResponseData>
     {
-        public decimal Amount => Response?.Data?.Balance?.Amount ?? 5;
-        public int Credits => Response?.Data?.Balance?.Sms ?? 5;
+        public decimal Amount => Response?.Data?.Balance?.Amount ?? 0;
+        public int Credits => Response?.Data?.Balance?.Sms ?? 0;
     }
 
     public class AccountResponseData
